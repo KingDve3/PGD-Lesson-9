@@ -1,52 +1,87 @@
-sample_list = [1,1,2,3,3,4,5,6,1,3,3,4,]
-print(type(sample_list))
-print(sample_list)
+import pgzrun
+import random
 
-sample_set = set(sample_list)
-print(type(sample_set))
-print(sample_set)
+WIDTH = 800
+HEIGHT = 600
 
-if 100 in sample_set:
-    print("yes")
-else:
-    print("no")
+START_SPEED = 10
+ITEMS = ["bag", "battery", "bottle", "chips"] 
 
-mySet = set([])
-mySet.add(70)
-mySet.add(32)
-mySet.add(92)
-mySet.add(56)
-mySet.add(29)
-print(mySet)
-mySet.remove(92)
-print(mySet)
+FINAL_LEVEL = 6
+current_level = 1
 
-#remove will throw error, if the element is not present in the set
-#mySet.remove(30)
-print(mySet)
+#lose the game
+game_over = False
 
-#Discard will not throw error, even if the number does not exist in the set
-mySet.discard(30)
-print(mySet)
+#win the game
+game_complete = False
 
-#Set Operations 
-# 1) Union
-# 2) Intersection
-# 3) Diffrence 
-# 4) Symmetic diffrence
+items = []
+animations = []
 
-a = {1, 2, 3, 4, 5}
-b = {4, 5, 6, 7, 8}
-print(a.union(b))
-print(a | b)
+def draw():
+    global items, current_level, game_over, game_complete
+    screen.clear()
+    screen.blit("bground", (0,0))
+    if game_over:
+        display_message("GAME OVER", "Try again.")
+    elif game_complete:
+        display_message("YOU WON!", "Well done.")
+    else:
+        for item in items:
+            item.draw()
 
-print(a.intersection(b))
-print(a & b)
+def display_message(heading, sub_heading):
+    screen.draw.text(heading, fontsize=60, center=(400,300), color="black")
+    screen.draw.text(sub_heading, fontsize=30, center=(400,330),color="black")
 
-print (a.difference(b))
-print(a - b)
-print (b.difference(a))
-print(b - a)
-print(a.symmetric_difference(b))
-print(a ^ b)
+def update():
+    global items
+    if len(items) == 0:
+        items = make_items(current_level)
 
+def make_items(number_of_extra_items):
+    items_to_create = get_option_to_create(number_of_extra_items)
+    new_items = create_items(items_to_create)
+    layout_items(new_items)
+    animate_items(new_items)
+    return new_items
+
+def get_option_to_create(number_of_extra_items):
+    items_to_create = ["paper"]
+
+    for i in range(0, number_of_extra_items):
+        random_option = random.choice(ITEMS)
+        items_to_create.append(random_option)
+    
+    return items_to_create
+
+
+
+
+
+
+def create_items(items_to_create):
+    new_items = []
+    for option in items_to_create:
+        item = Actor(option + "img")
+        new_items.append(item)
+    return new_items
+
+
+
+
+
+def layout_items(items_to_layout):
+    pass
+
+def animate_items(items_to_animate):
+    pass
+
+
+
+
+
+
+
+pgzrun.go()
